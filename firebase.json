@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "your-site",
+    "site": "device-attr-demo-46062235",
     "public": "dist",
     "ignore": [
       "firebase.json",
