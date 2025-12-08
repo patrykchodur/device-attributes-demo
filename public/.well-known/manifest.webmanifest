@@ -2,20 +2,29 @@
   "id": "/",
   "scope": "/",
   "start_url": "/",
-  "name": "Sample IWA",
+  "name": "Device Attributes Demo IWA",
   "version": "0.0.0",
   "display": "standalone",
   "permissions_policy": {
     "cross-origin-isolated": [
+      "self"
+    ],
+    "window-management": [
+      "self"
+    ],
+    "controlled-frame": [
+      "self"
+    ],
+    "device-attributes": [
       "self"
     ]
   },
   "isolated_storage": true,
   "icons": [
     {
-      "src": "/images/icon-192x192.png",
+      "src": "/images/icon-512x512.png",
       "type": "image/png",
-      "sizes": "192x192",
+      "sizes": "512x512",
       "purpose": "any maskable"
     }
   ]

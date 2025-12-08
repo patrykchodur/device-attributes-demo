@@ -34,7 +34,7 @@ if (process.env.BUILD_TYPE === "release") {
     ...wbn({
       baseURL: new wbnSign.WebBundleId(key).serializeWithIsolatedWebAppOrigin(),
       static: { dir: "public" },
-      output: "iwa.swbn",
+      output: "device-attributes-demo.swbn",
       integrityBlockSign: {
         strategy: new wbnSign.NodeCryptoSigningStrategy(key),
       },
@@ -84,30 +84,57 @@ function setWebManifestVersion() {
     name: "iwa:set-manifest-version",
     apply: "build",
     buildStart: () => {
+      // 1. If folder doesn't exist, start at 1.0.0
       if (!fs.existsSync("releases")) return setVersion("1.0.0");
 
       const bundles = fs.readdirSync("releases").filter((f) => f.endsWith(".swbn"));
-      const versions = bundles.map((f) => f.replace("iwa_", "").replace(".swbn", ""));
-      const [[major]] = versions
+
+      // 2. FIX: If folder exists but is empty, start at 1.0.0
+      if (bundles.length === 0) return setVersion("1.0.0");
+
+      const versions = bundles.map((f) => f.replace("device-attributes-demo_", "").replace(".swbn", ""));
+
+      const sortedVersions = versions
         .map((v) => v.split(".").map((k) => parseInt(k)))
-        .sort((a, b) => b[0] - a[0]);
-      setVersion(`${major + 1}.0.0`);
+        .sort((a, b) => b[0] - a[0] || b[1] - a[1] || b[2] - a[2]);
+
+      // 3. Safety check: ensure we actually got a valid version array back
+      if (sortedVersions.length === 0 || !sortedVersions[0]) return setVersion("1.0.0");
+
+      const [major, minor, patch] = sortedVersions[0];
+
+      setVersion(`${major}.${minor}.${patch + 1}`);
     },
     closeBundle: () => setVersion("0.0.0"),
   } satisfies PluginOption;
 }
 
 // Copies ./dist/iwa.swbn to ./releases/iwa_<version>.swbn.
+// Copies ./dist/device-attributes-demo.swbn to ./releases/device-attributes-demo_<version>.swbn.
 function copyBundleToReleases() {
   return {
     name: "iwa:copy-bundle-to-release",
     apply: "build",
-    closeBundle: () => {
+    // CHANGE: Use writeBundle instead of closeBundle
+    writeBundle: () => {
       if (!fs.existsSync("releases")) fs.mkdirSync("releases");
 
       const WEBMANIFEST = "public/.well-known/manifest.webmanifest";
       const manifest = JSON.parse(fs.readFileSync(WEBMANIFEST, "utf-8"));
-      fs.copyFileSync("dist/iwa.swbn", `releases/iwa_${manifest.version}.swbn`);
+
+      // At this stage, the manifest version is still the "Build Version" (e.g., 1.0.5)
+      // because the reset logic in the other plugin's closeBundle hasn't run yet.
+
+      const source = "dist/device-attributes-demo.swbn";
+      const dest = `releases/device-attributes-demo_${manifest.version}.swbn`;
+
+      // Optional: Check if source exists to avoid crashing if the build failed silently
+      if (fs.existsSync(source)) {
+          fs.copyFileSync(source, dest);
+          console.log(`✓ Copied IWA bundle to ${dest}`);
+      } else {
+          console.error(`✗ Could not find source bundle at ${source}`);
+      }
     },
   } satisfies PluginOption;
 }
@@ -122,7 +149,7 @@ function generateUpdateManifest() {
       const bundles = fs.readdirSync("releases").filter((f) => f.endsWith(".swbn"));
       const versions = bundles.map((file) => {
         return {
-          version: file.replace("iwa_", "").replace(".swbn", ""),
+          version: file.replace("device-attributes-demo_", "").replace(".swbn", ""),
           src: `https://${firebase_json.hosting.site}.web.app/releases/${file}`,
         };
       });
