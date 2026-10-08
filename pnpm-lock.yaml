@@ -14,6 +14,9 @@ importers:
       '@types/node':
         specifier: ^24.0.3
         version: 24.10.1
+      '@types/w3c-device-attributes':
+        specifier: ^0.0.0
+        version: 0.0.0
       dotenv:
         specifier: ^16.5.0
         version: 16.6.1
@@ -309,6 +312,9 @@ packages:
 
   '@types/node@24.10.1':
     resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
+
+  '@types/w3c-device-attributes@0.0.0':
+    resolution: {integrity: sha512-GCLw7vc6wN/xqXww9eCsde0jAgiPALQg0NltHRu8fPs1Z8C/wmNLX3SIL9r6FFzi27y09HvXg0M1J9HJWK3SNA==}
 
   base32-encode@2.0.0:
     resolution: {integrity: sha512-mlmkfc2WqdDtMl/id4qm3A7RjW6jxcbAoMjdRmsPiwQP0ufD4oXItYMnPgVHe80lnAIy+1xwzhHE1s4FoIceSw==}
@@ -624,6 +630,8 @@ snapshots:
   '@types/node@24.10.1':
     dependencies:
       undici-types: 7.16.0
+
+  '@types/w3c-device-attributes@0.0.0': {}
 
   base32-encode@2.0.0:
     dependencies:

@@ -8,11 +8,11 @@ const errorElement = document.querySelector<HTMLSpanElement>('#error')!;
 const buttonElement = document.querySelector<HTMLButtonElement>('#getAttributes')!;
 buttonElement.addEventListener('click', async () => {
   try {
-    directoryIdElement.textContent = await (navigator as any).managed.getDirectoryId();
-    hostnameElement.textContent = await (navigator as any).managed.getHostname();
-    serialNumberElement.textContent = await (navigator as any).managed.getSerialNumber();
-    annotatedAssetIdElement.textContent = await (navigator as any).managed.getAnnotatedAssetId();
-    annotatedLocationElement.textContent = await (navigator as any).managed.getAnnotatedLocation();
+    directoryIdElement.textContent = await navigator.managed.getDirectoryId();
+    hostnameElement.textContent = await navigator.managed.getHostname();
+    serialNumberElement.textContent = await navigator.managed.getSerialNumber();
+    annotatedAssetIdElement.textContent = await navigator.managed.getAnnotatedAssetId();
+    annotatedLocationElement.textContent = await navigator.managed.getAnnotatedLocation();
   } catch (e: any) {
     errorElement.textContent = e;
   }

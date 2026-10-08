@@ -13,6 +13,7 @@
   "devDependencies": {
     "@picocss/pico": "^2.1.1",
     "@types/node": "^24.0.3",
+    "@types/w3c-device-attributes": "^0.0.0",
     "dotenv": "^16.5.0",
     "rollup": "^4.44.0",
     "rollup-plugin-webbundle": "^0.2.0",
